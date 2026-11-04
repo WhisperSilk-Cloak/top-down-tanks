@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {lobbySummary} from '../lib/room-members.ts';
+const now=1000000,g={lobby:true,winner:null,mode:'coop'},row={code:'ABC123',p0:'secret-host',p1:null,state:JSON.stringify(g),lastActive:now};
+assert.deepEqual(lobbySummary(row,now),{code:'ABC123',mode:'Co-op',count:1,max:4,status:'Waiting',joinable:true});
+const full={...row,p1:JSON.stringify(['secret-a','secret-b','secret-c'])};assert.equal(lobbySummary(full,now).joinable,false);assert.equal(lobbySummary(full,now).count,4);
+assert.equal(lobbySummary({...full,state:JSON.stringify({...g,lobby:false})},now).status,'In progress');
+for(const patch of [{winner:0},{departed:true}])assert.equal(lobbySummary({...row,state:JSON.stringify({...g,...patch})},now),null);
+assert.equal(lobbySummary({...row,lastActive:now-120001},now),null);
+assert(!JSON.stringify(lobbySummary(full,now)).includes('secret'));
+console.log('Lobby discovery: 1/4, full, started, abandoned and completed rooms; no tokens or game state exposed.');

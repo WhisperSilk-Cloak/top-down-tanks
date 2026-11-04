@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {initial,createGame,act,expireTurn,canSee,playerView,sightPolygon,TURN_MS} from '../lib/game.ts';
+const tank=(x,y)=>({x,y,hp:3,angle:0});
+let g={...initial(),walls:[],round:7,tanks:[tank(100,250),tank(700,250)]};
+assert.equal(TURN_MS,60000);assert(!canSee(g.tanks[0],700,250,[]));let v=playerView(g,0);assert(v.tanks[1].hidden);assert.equal(v.tanks[1].x,-1000);assert.equal(g.tanks[1].x,700);
+g.tanks[1].x=300;assert(!playerView(g,0).tanks[1].hidden);g.walls=[{x:200,y:200,w:20,h:100}];assert(playerView(g,0).tanks[1].hidden);assert(playerView(g,1).tanks[0].hidden);assert.equal(sightPolygon(g.tanks[0],g.walls).split(' ').length,240);
+g={...g,walls:[],tanks:[tank(100,250),tank(700,250)]};let shot=act(g,0,{type:'fire',x:200,y:250});v=playerView(shot,0);assert(v.animation.before.tanks[1].hidden);assert.equal(v.animation.impacts.length,0);assert(!playerView(shot,0,shot.resolutionUntil).tanks[1].hidden);assert(!v.shots[0].clipped);assert(v.shots[0].ex>340);assert.equal(playerView(shot,1).shots.length,0);
+let t=expireTurn(g,1000);assert.equal(t.turnEndsAt,61000);assert.equal(expireTurn(t,60999),t);assert.equal(expireTurn(t,61000).turn,1);
+let c={...createGame('coop'),round:7,turnEndsAt:1};c=expireTurn(c,999999);assert.equal(c.turn,0);assert.equal(c.turnEndsAt,undefined);assert.equal(expireTurn(c,9999999),c);c=act(c,0,{type:'bonus',bonus:c.offers[0][0]});c=act(c,1,{type:'bonus',bonus:c.offers[1][0]});c=act(c,0,{type:'end'});assert.equal(c.turn,1);assert.equal(c.turnEndsAt,undefined);assert.equal(playerView(c,0),c);
+console.log('Fog/timer checks passed: range, wall occlusion, both player views, snapshot and projectile redaction, 60-second expiration and untimed co-op.');

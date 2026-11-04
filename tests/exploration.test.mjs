@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {initial,act,playerView,presentedGame,revealed,buildAvailable} from '../lib/game.ts';
+const base={...initial(),walls:[],tanks:[{x:90,y:250,hp:3,angle:0},{x:710,y:250,hp:3,angle:Math.PI}]};
+assert(!buildAvailable(base));assert.throws(()=>act(base,0,{type:'build',x:300,y:200}),/not available/);
+let m=act(base,0,{type:'move',x:270,y:250});assert.throws(()=>act(m,0,{type:'fire',x:270,y:350}),/finish/);
+assert.equal(presentedGame(m,m.movement.start).tanks[0].x,90);assert.equal(presentedGame(m,m.movement.start+m.movement.duration/2).tanks[0].x,180);assert.equal(presentedGame(m,m.resolutionUntil).tanks[0].x,270);assert(m.explored[0].length>0);
+let g=act(base,0,{type:'fire',x:190,y:250});assert(revealed(g,0,600,250,g.resolutionUntil));assert(!revealed(g,0,600,300));assert(!revealed({...g,round:4},0,600,250));assert(revealed({...g,round:3},0,600,250,g.resolutionUntil));
+let v=playerView(g,1);assert.equal(v.reveals.length,0);assert.equal(v.explored.length,1);assert(v.flashes.length);assert.equal(playerView(g,1,Date.now()+5000).flashes.length,0);
+const remembered=g.explored[0].length;g={...g,round:4,resolutionUntil:0,animation:undefined};assert(playerView(g,0).tanks[1].hidden);assert.equal(g.explored[0].length,remembered);
+console.log('Exploration checks passed: terrain persistence, shot strip expiry, per-player redaction, muzzle flash lifetime, movement interpolation/input locking, building removed.');

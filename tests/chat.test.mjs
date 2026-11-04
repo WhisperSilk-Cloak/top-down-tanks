@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {appendChat} from '../lib/chat.ts';
+const m={id:'one',player:0,name:'Teal',color:'#fff',text:' hello ',at:1000};
+const a=appendChat([],m);assert.equal(a[0].text,'hello');assert.equal(appendChat(a,m),a);
+assert.throws(()=>appendChat(a,{...m,id:'two',at:1500}));
+assert.equal(appendChat(a,{...m,id:'two',player:1,at:1500}).length,2);
+for(const text of ['', '   ', 'x'.repeat(301),null])assert.throws(()=>appendChat([],{...m,text}));
+let history=[];for(let i=0;i<120;i++)history=appendChat(history,{...m,id:String(i),at:i*1000});assert.equal(history.length,100);assert.equal(history[0].id,'20');
+assert.equal(appendChat([],{...m,text:'<script>alert(1)</script>'})[0].text,'<script>alert(1)</script>');
+console.log('Chat: message bounds, cooldown, independent senders, retry deduplication and bounded history pass.');

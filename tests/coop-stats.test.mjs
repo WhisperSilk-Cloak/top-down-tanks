@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {initial,act,expireTurn,createGame,emptyStats} from '../lib/game.ts';
+const tank=(x,y,hp=3)=>({x,y,hp,angle:0});
+const base={...initial(),mode:'coop',wave:1,walls:[],tanks:[tank(100,100),tank(100,400)],enemies:[tank(300,100,2)]};
+let g=act(base,0,{type:'fire',x:200,y:100});
+assert.deepEqual(g.stats.total[0],{...emptyStats(),shells:1,hits:1});
+assert.deepEqual(g.stats.total[1],emptyStats());
+let kill=act({...g,turn:1,fired:false,deferredNext:false,resolutionUntil:0,tanks:[tank(100,400),tank(100,100)]},1,{type:'fire',x:200,y:100});
+assert.equal(kill.stats.total[0].kills,0);assert.equal(kill.stats.total[1].kills,1);
+const advanced=expireTurn(kill,kill.nextLevelAt);assert.deepEqual(advanced.stats.total,kill.stats.total);assert.deepEqual(advanced.stats.wave,[emptyStats(),emptyStats()]);
+g=act({...base,enemies:[tank(300,100,3)]},0,{type:'fire',x:200,y:100,ammo:'spread'});
+assert.equal(g.stats.total[0].shells,3);assert.equal(g.stats.total[0].hits,1);assert.equal(g.stats.total[0].misses,2);
+g=act({...base,tanks:[tank(100,100),tank(300,100)],enemies:[tank(700,400)]},0,{type:'fire',x:200,y:100});
+assert.equal(g.stats.total[0].friendlyHits,1);assert.equal(g.stats.total[0].hits,0);assert.equal(g.stats.total[0].misses,0);
+g=act({...base,enemies:[tank(500,400)]},0,{type:'fire',x:200,y:100});assert.equal(g.stats.total[0].selfHits,1);assert.equal(g.stats.total[0].hits,0);
+assert.deepEqual(createGame('coop').stats.total,[emptyStats(),emptyStats()]);assert.equal(createGame('pvp').stats,undefined);
+console.log('Stats passed: individual shells, shared kill credit, misses, friendly/self hits, wave reset and retained match totals.');

@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createGame,previewAim,playerView} from '../lib/game.ts';
+const g=createGame('coop',4);delete g.offers;g.lobby=false;g.buildDoneRound=g.round;
+const before=structuredClone(g),a=previewAim(g,g.turn,Math.PI/3,g.round);
+assert.deepEqual(g,before);
+assert.equal(a.round,g.round);assert.equal(a.used,g.used);assert.equal(a.fired,g.fired);
+for(let p=0;p<4;p++)assert(Math.abs(playerView(a,p).tanks[g.turn].angle-Math.PI/3)<1e-9);
+assert.throws(()=>previewAim(g,1,0,g.round));
+assert.throws(()=>previewAim(g,0,NaN,g.round));
+assert.throws(()=>previewAim(g,0,0,g.round-1));
+for(const patch of [{mode:'pvp'},{lobby:true},{winner:0},{offers:[[]]},{fired:true},{resolutionUntil:Date.now()+10000}])assert.throws(()=>previewAim({...g,...patch},0,0,g.round));
+assert(Math.abs(previewAim(g,0,Math.PI*9,g.round).tanks[0].angle-Math.PI)<1e-9);
+console.log('Shared aim: four teammates see rotation; stale, invalid and out-of-turn updates rejected without combat changes.');
