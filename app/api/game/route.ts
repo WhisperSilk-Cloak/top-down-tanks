@@ -22,14 +22,14 @@ export async function POST(req:Request){try{
  if(b.op==='color'){
   if(!g.lobby||g.departed)throw Error('Colors can only be selected in an open lobby.');selectPlayerColor(g,p,b.color);g.colorReady??=tokens.map(()=>true);g.colorReady[p]=true;await write(g);
  }else if(b.op==='start'){
-  if(p!==0)throw Error('Only the host can start.');if(!g.lobby||g.departed)throw Error('This lobby is not available.');if(tokens.length<2)throw Error('At least two players are needed.');if(g.colorReady?.some(v=>!v))throw Error('Wait for everyone to confirm a color.');
+  if(p!==0)throw Error('Only the host can start.');if(!g.lobby||g.departed)throw Error('This lobby is not available.');if(tokens.length<(g.mode==='coop'?1:2))throw Error('PvP needs at least two players.');if(g.colorReady?.some(v=>!v))throw Error('Wait for everyone to confirm a color.');
   const fresh=createGame(g.mode??'pvp',tokens.length);fresh.playerColors=g.playerColors?.slice();fresh.lobby=false;if(fresh.mode!=='coop')fresh.turnEndsAt=Date.now()+turnDuration(fresh);await write(fresh);
  }else if(b.op==='leave'){
   if(g.lobby){g.departed=true;g.winner=-1;g.log='A player left the lobby. Please create a new room.';await write(g);}else await write(forfeit(g,p));return Response.json({left:true});
  }else{
-  if(!g.lobby&&tokens.length>=2){const after=expireTurn(g);if(after!==g)await write(after);}
+  if(!g.lobby&&tokens.length>=(g.mode==='coop'?1:2)){const after=expireTurn(g);if(after!==g)await write(after);}
   if(b.op==='aim'){await write(previewAim(g,p,b.angle??NaN,b.round??-1));}
-  if(b.op==='act'){if(g.leftPlayers?.includes(p))throw Error('You have left this match.');if(g.lobby||tokens.length<2)throw Error('Wait for the host to start.');if(b.version!==row.version)throw Error('Match updated. Try your action again.');await write(act(g,p,b.action));}
+  if(b.op==='act'){if(g.leftPlayers?.includes(p))throw Error('You have left this match.');if(g.lobby||tokens.length<(g.mode==='coop'?1:2))throw Error('Wait for the host to start.');if(b.version!==row.version)throw Error('Match updated. Try your action again.');await write(act(g,p,b.action));}
  }
- return Response.json({state:playerView(g,p),version:row.version,ready:!g.lobby&&tokens.length>=2,player:p,serverNow:Date.now()});
+ return Response.json({state:playerView(g,p),version:row.version,ready:!g.lobby&&tokens.length>=(g.mode==='coop'?1:2),player:p,serverNow:Date.now()});
 }catch(e){return Response.json({error:e instanceof Error?e.message:'Unable to connect.'},{status:400});}}

@@ -1,12 +1,12 @@
 # Top Down Tanks
 
-A turn-based multiplayer tank game for 2–4 players, built for desktop and mobile browsers.
+A turn-based tank game for desktop and mobile browsers: solo or co-op enemy waves for 1–4 players, and PvP for 2–4 players.
 
-**[Play the live game](https://halfway-tanks-tom.astuterook12.chatgpt.site)** · [Setup](docs/SETUP.md) · [Architecture](docs/ARCHITECTURE.md) · [Development history](history/README.md)
+**[Play the live game](https://halfway-tanks-tom.thomasram98.chatgpt.site)** · [Setup](docs/SETUP.md) · [Architecture](docs/ARCHITECTURE.md) · [Development history](history/README.md)
 
 ## The game
 
-Create a room, invite friends by code or use the lobby browser, choose tank colors, and let the host start the match. Play PvP free-for-all with personal fog of war, or cooperate against waves of enemy tanks.
+Create a room, invite friends by code or use the lobby browser, choose tank colors, and let the host start the match. Play PvP free-for-all with personal fog of war, or fight waves of enemy tanks solo or with friends. To play solo, select Co-op waves, create a room, and press Start match.
 
 - Free movement with a movement preview and turn budget.
 - Turret rotation: tap for fine aiming or hold to accelerate.
@@ -31,7 +31,7 @@ Use **Node.js 24** and the pnpm version pinned in `package.json`. See [SETUP.md]
 node --experimental-strip-types --test tests/*.test.mjs
 ```
 
-The 28 test files passed when this GitHub export was prepared. The original deployed version also passed type checking and its production build. A fresh dependency install/build and cross-device browser playtest were not repeated for this export.
+All 29 test files, type checking, and the production build passed for the solo co-op update. The new regression test covers solo bonus selection, enemy turns, wave transitions, defeat, and rematches. Browser playtesting remains unverified because the preview connection was refused.
 
 ## Project ownership and process
 
