@@ -123,7 +123,7 @@
 }
 @media (min-width: 701px), (orientation: landscape) {
   .playingMatch .playArea:has(.actionControls) {
-    grid-template-columns: minmax(0, 1fr) clamp(155px, 26vw, 280px);
+    grid-template-columns: minmax(0, 1fr) clamp(132px, 17vw, 180px);
     align-items: start;
   }
   .playingMatch .arenaWrap > svg {
@@ -150,5 +150,52 @@
 @media (orientation: landscape) and (max-height: 500px) {
   .playingMatch .arenaWrap > svg {
     max-height: max(90px, calc(100dvh - 104px));
+  }
+}
+
+/* Stack the mode buttons in the side panel to leave more width for the arena. */
+@media (min-width: 701px), (orientation: landscape) {
+  .playingMatch {
+    max-width: none;
+    padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+  }
+  .playingMatch .actionControls .modes {
+    flex-direction: column;
+  }
+  .playingMatch .actionControls .modes button {
+    width: 100%;
+  }
+  .playingMatch .actionControls .ammoPicker {
+    display: block;
+    font-size: 0;
+  }
+  .playingMatch .actionControls .ammoPicker select {
+    font-size: 12px;
+  }
+  .playingMatch .actionControls .rotationControls {
+    gap: 4px;
+  }
+  .playingMatch .actionControls .rotationControls button {
+    padding-inline: 2px;
+    font-size: 11px;
+  }
+  .playingMatch .actionControls .primary,
+  .playingMatch .actionControls .end {
+    grid-column: 1 / -1;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .playingMatch > header {
+    height: 36px;
+  }
+  .playingMatch .actionControls {
+    gap: 3px;
+    padding: 4px;
+  }
+  .playingMatch .actionControls :is(.primary, .end, .rotationControls button, .modes button, select) {
+    min-height: 36px;
+  }
+  .playingMatch .arenaWrap > svg {
+    max-height: max(90px, calc(100dvh - 85px));
   }
 }
