@@ -33,7 +33,7 @@
 .arenaWrap.choosingBonus{position:relative;min-height:460px}.choosingBonus>svg{opacity:.35}.bonusOverlay{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0b1b20ed,#172f2ae6);backdrop-filter:blur(4px);overflow:auto}.bonusOverlayHeading{text-align:center}.bonusOverlayHeading h2{margin:8px 0;font-size:clamp(22px,3vw,36px);color:#effcf4;outline:none}.bonusOverlayHeading p{font-size:13px;color:#b6cfc5;margin:0 0 20px}.battleCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;width:100%;max-width:720px}.battleCard{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:17px 14px 0;min-height:250px;border:1px solid #9bc5b580;border-radius:12px;background:linear-gradient(155deg,#33564b,#152c28 65%);color:#bef3d9;box-shadow:0 12px 25px #0006;cursor:pointer;transition:transform .15s,border-color .15s;animation:cardArrival .3s ease-out both}.battleCard:nth-child(2){animation-delay:.06s}.battleCard:nth-child(3){animation-delay:.12s}.battleCard:hover:not(:disabled),.battleCard:focus-visible{transform:translateY(-6px);border-color:#d5ffe8;outline:2px solid #b7f8dc;outline-offset:3px}.battleCard:disabled{cursor:wait;opacity:.6}.cardNumber{align-self:flex-start;font-size:9px;letter-spacing:1.5px;opacity:.75}.battleCard svg{width:70px;height:70px;margin:10px 0}.battleCard strong{font-size:19px;color:#fff}.cardDescription{font-size:12px;line-height:1.5;padding:10px 0 18px;color:#cee3d9}.cardSelect{display:flex;justify-content:space-between;align-items:center;margin-top:auto;width:100%;border-top:1px solid #ffffff26;padding:12px 0;font-size:10px;letter-spacing:1px}.card-shield{color:#9bdcff;background:linear-gradient(155deg,#31586d,#142b36 65%)}.card-bomb,.card-cluster{color:#ffd395;background:linear-gradient(155deg,#6c5134,#34271d 65%)}.card-piercing,.card-chain{color:#d4b7ff;background:linear-gradient(155deg,#514268,#252033 65%)}.bonusReady{font-size:12px;color:#b6cfc5;margin:18px 0 0}.bonusChosen{border:1px solid #8adbb6;border-radius:12px;padding:28px;text-align:center;background:#203e34;width:min(100%,420px)}.bonusChosen>span{display:block;color:#a8f5cb;font-size:11px;letter-spacing:2px;margin-bottom:12px}.bonusChosen strong{color:#fff;font-size:24px}.bonusChosen p{color:#cee3d9;font-size:14px}.bonusOverlay .error{margin-top:8px}.bonusOverlayHeading,.battleCards,.bonusChosen,.bonusReady{flex-shrink:0}@keyframes cardArrival{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@media(max-width:600px){.arenaWrap.choosingBonus{min-height:410px}.bonusOverlay{padding:16px 10px}.battleCards{gap:7px}.battleCard{padding:12px 7px 0;min-height:235px;border-radius:8px}.battleCard strong{font-size:14px}.battleCard svg{width:50px;height:50px}.cardDescription{font-size:11px}.cardNumber,.cardSelect{font-size:8px;letter-spacing:.5px}.bonusOverlayHeading p{font-size:12px}}@media(prefers-reduced-motion:reduce){.battleCard{animation:none;transition:none}}
 .bonusOverlay{line-height:1.4}.bonusOverlayHeading .eyebrow{justify-content:center}.bonusOverlayHeading h2{line-height:1.15}.bonusOverlay svg{cursor:inherit}
 
-/* Keep the battlefield and turn controls together while the match details scroll. */
+/* Keep the battlefield and controls together in the normal page flow. */
 .playingMatch .intro {
   display: none;
 }
@@ -45,9 +45,6 @@
   margin-top: 16px;
 }
 .playingMatch .playArea {
-  position: sticky;
-  top: 0;
-  z-index: 6;
   display: grid;
   gap: 8px;
   padding-block: 6px;
